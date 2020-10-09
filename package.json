@@ -4,7 +4,12 @@
   "description": "An API REST project using expressjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thealf154/express_proyecto.git"
   },
   "keywords": [
     "api",
@@ -14,7 +19,14 @@
   ],
   "author": "Alfredo Vanegas Arcega",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Thealf154/express_proyecto/issues"
+  },
+  "homepage": "https://github.com/Thealf154/express_proyecto#readme",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
