@@ -32,14 +32,9 @@ pokemonRoutes.get("/:id([0-9]{1,3})", async(req, res, next) => {
 
 //This only receives text requests
 pokemonRoutes.get("/:name([A-Za-z]+)", async (req, res, next) => {
-  let pokemon = await db.query("SELECT pokemon FROM pokemon");
   const name = req.params.name;
-  //Return the pokemon that the user wants
-  const pk = pokemon.filter((p) => {
-    return (p.pk_name[name].toUpperCase() == name.toUpperCase()) ? p : null;
-  });
-  //If it didn't find th pokemon, we return a 404 error
-  pk.length > 0 ? res.status(200).send(pk) : res.status(404).send("Pokémon no encontrado");
+  let pokemon = await db.query(`SELECT pok_name FROM pokemon WHERE pok_name LIKE '%${name}%'`);
+  return res.status(200).send(pokemon);
 });
 
 module.exports = pokemonRoutes;
