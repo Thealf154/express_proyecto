@@ -12,29 +12,6 @@ pokemonRoutes.get("/", async (req, res, next) => {
   return res.status(200).json({ code: 1, message: pkmn });
 });
 
-//This route can't be accessed by normal browsers since they can only do GET requests
-pokemonRoutes.post("/", async (req, res, next) => {
-  const { pok_name, pok_height, pok_weight, pok_base_experience } = req.body;
-
-  if (pok_name && pok_height && pok_base_experience && pok_weight) {
-    let query =
-      "INSERT INTO pokemon (pok_name, pok_height, pok_weight, pok_base_experience)";
-    query += ` VALUES('${pok_name}', ${pok_height}, ${pok_weight}, ${pok_base_experience})`;
-    const rows = await db.query(query);
-    if (rows.affectedRows == 1) {
-      return res
-        .status(200)
-        .json({ code: 201, message: "Pokemon insertado correctamente" });
-    }
-    return res
-      .status(500)
-      .json({ code: 500, message: "Campos incompletos"});
-  }
-  return res
-    .status(500)
-    .json({ code: 500, message: "Pokemon insertado sin éxito" });
-});
-
 //Expresión regular que acepta un grupo de tres números
 pokemonRoutes.get("/:id([0-9]{1,3})", async (req, res, next) => {
   const pokemon = await db.query("SELECT * FROM pokemon");
@@ -56,6 +33,63 @@ pokemonRoutes.get("/:name([A-Za-z]+)", async (req, res, next) => {
       .status(404)
       .json({ code: 404, message: "Pokemon no encontrado" });
   return res.status(200).send(pokemon);
+});
+
+/* Post, Delete, and other routes*/
+pokemonRoutes.post("/", async (req, res, next) => {
+  const { pok_name, pok_height, pok_weight, pok_base_experience } = req.body;
+
+  if (pok_name && pok_height && pok_base_experience && pok_weight) {
+    let query =
+      "INSERT INTO pokemon (pok_name, pok_height, pok_weight, pok_base_experience)";
+    query += ` VALUES('${pok_name}', ${pok_height}, ${pok_weight}, ${pok_base_experience})`;
+    const rows = await db.query(query);
+    if (rows.affectedRows == 1) {
+      return res
+        .status(200)
+        .json({ code: 201, message: "Pokemon insertado correctamente" });
+    }
+    return res.status(500).json({ code: 500, message: "Campos incompletos" });
+  }
+  return res
+    .status(500)
+    .json({ code: 500, message: "Pokemon insertado sin éxito" });
+});
+
+pokemonRoutes.delete("/:id([0-9]{1,3})", async (req, res, next) => {
+  const query = `DELETE FROM pokemon WHERE pok_id=${req.params.id}`;
+  const rows = await db.query(query);
+
+  //This checks if only ONE column is affected
+  if (rows.affectedRows == 1) {
+    return res
+      .status(200)
+      .json({ code: 200, message: "Pokemon borrado correctamente" });
+  }
+  return res.status(404).json({ code: 404, message: "Pokemon no encontrado" });
+});
+
+//PUT is for changing all the values of datacell
+pokemonRoutes.put("/:id([0-9]{1,3})", async (req, res, next) => {
+  const { pok_name, pok_height, pok_weight, pok_base_experience } = req.body;
+  let query = `UPDATE pokemon SET pok_name='${pok_name}', pok_height='${pok_height}', `;
+  query += `pok_weight='${pok_weight}', pok_base_experience='${pok_base_experience}' WHERE pok_id='${req.params.id}' `;
+
+  if (pok_name && pok_height && pok_base_experience && pok_weight) {
+    let query = `UPDATE pokemon SET pok_name='${pok_name}', pok_height='${pok_height}', `;
+    query += `pok_weight='${pok_weight}', pok_base_experience='${pok_base_experience}' WHERE pok_id='${req.params.id}' `;
+    const rows = await db.query(query);
+    if (rows.affectedRows == 1) {
+      return res
+        .status(200)
+        .json({ code: 200, message: "Pokemon actualizado correctamente" });
+    }
+    return res.status(500).json({ code: 500, message: "Campos incompletos" });
+  }
+
+  return res
+    .status(500)
+    .json({ code: 500, message: "Pokemon actulizado sin éxito" });
 });
 
 module.exports = pokemonRoutes;
