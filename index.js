@@ -3,6 +3,7 @@ const morgan = require("morgan")
 const express = require('express');
 const app = express();
 const pokemonRoutes = require("./routes/pokemonRoutes")
+const user = require("./routes/user")
 
 //Required to interact with POSTMAN
 //"use" will put a function for every petition to the server 
@@ -19,6 +20,8 @@ app.get("/", (req, res, next) => {
 
 //This is a reference to all the routes in pokemonRoutes
 app.use("/pokemon", pokemonRoutes);
+//This is to manage the user database requests
+app.use("/user", user);
 
 app.use((req, res, next) => {
   return res.status(404).json({ code: 404, message: "URL no encontrada"})
