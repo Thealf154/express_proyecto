@@ -2,6 +2,8 @@ const { query } = require("express");
 const express = require("express");
 const user = express.Router();
 const db = require("../config/database");
+//Authorization token
+const jwt = require("jsonwebtoken");
 
 user.post("/", async (req, res, next) => {
   const { user_name, user_email, user_password } = req.body;
@@ -24,10 +26,35 @@ user.post("/", async (req, res, next) => {
 });
 
 user.get("/", async (req, res, next) => {
-   const query = "SELECT * FROM user" 
-   const rows = await db.query(query);
+  const query = "SELECT * FROM user";
+  const rows = await db.query(query);
 
-   return res.status(200).json({code: 200, message: rows});
+  return res.status(200).json({ code: 200, message: rows });
+});
+
+//We use POST since the data taken is encoded in the body
+user.post("/login", async (req, res, next) => {
+  const { user_email, user_password } = req.body;
+  const query = `SELECT * FROM user WHERE user_email = '${user_email}' AND user_password = '${user_password}';`;
+  const rows = await db.query(query);
+
+  if (user_email && user_password) {
+    if (rows.length == 1)
+    {
+      //recieves the data to create an autentication token for the user
+      const token = jwt.sign({
+        user_id : rows[0].user_id,
+        user_email : rows[0].user_email
+      }, "debugkey"); //Debugkey is a varaiable not visible in the code but only in the server
+      return res.status(200).json({ code: 200, message: token });
+    }
+    else
+      return res.status(401).json({code : 401, message : "Usuario y/o contraseña equivocada"})
+  }
+    else
+      return res
+        .status(404)
+        .json({ code: 401, message: "Campos incompletos" });
 });
 
 module.exports = user;
