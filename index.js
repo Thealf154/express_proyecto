@@ -2,8 +2,13 @@
 const morgan = require("morgan")
 const express = require('express');
 const app = express();
+//Routes
 const pokemonRoutes = require("./routes/pokemonRoutes")
-const user = require("./routes/user")
+const user = require("./routes/user");
+//Middleware
+const auth = require("./middleware/auth")
+const notFound = require("./middleware/notFound");
+const index = require("./middleware/index");
 
 //Required to interact with POSTMAN
 //"use" will put a function for every petition to the server 
@@ -11,21 +16,15 @@ const user = require("./routes/user")
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
-//app.use(bodyParser.json()); //For every petition it will be passed to a json
-//app.use(bodyParser.urlencoded({extended: true})); //This will put the json as a urlenconded
 
-app.get("/", (req, res, next) => {
-  return res.status(200).send.json({code: 1, message: "Bienvenido a la Pokedex"}); //También es válido
-}); //get(url, function)
 
-//This is a reference to all the routes in pokemonRoutes
-app.use("/pokemon", pokemonRoutes);
 //This is to manage the user database requests
 app.use("/user", user);
-
-app.use((req, res, next) => {
-  return res.status(404).json({ code: 404, message: "URL no encontrada"})
-});
+app.use(auth);
+//This is a reference to all the routes in pokemonRoutes
+app.use("/pokemon", pokemonRoutes);
+app.use(notFound);
+app.use("/", index);
 
 //Load a local server
 app.listen(process.env.PORT || 3000, () => {
