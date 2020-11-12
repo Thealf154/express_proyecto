@@ -49,12 +49,12 @@ user.post("/login", async (req, res, next) => {
       return res.status(200).json({ code: 200, message: token });
     }
     else
-      return res.status(401).json({code : 401, message : "Usuario y/o contraseña equivocada"})
+      return res.status(200).json({code : 200, message : "Usuario y/o contraseña equivocada"})
   }
     else
       return res
-        .status(404)
-        .json({ code: 401, message: "Campos incompletos" });
+        .status(500)
+        .json({ code: 500, message: "Campos incompletos" });
 });
 
 module.exports = user;

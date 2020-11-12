@@ -9,10 +9,12 @@ const user = require("./routes/user");
 const auth = require("./middleware/auth")
 const notFound = require("./middleware/notFound");
 const index = require("./middleware/index");
+const cors = require("./middleware/cors")
 
 //Required to interact with POSTMAN
 //"use" will put a function for every petition to the server 
 //Known better as a middleWare
+app.use(cors);
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
@@ -20,11 +22,11 @@ app.use(express.urlencoded({ extended: true}));
 
 //This is to manage the user database requests
 app.use("/user", user);
+app.use("/", index);
 app.use(auth);
 //This is a reference to all the routes in pokemonRoutes
 app.use("/pokemon", pokemonRoutes);
 app.use(notFound);
-app.use("/", index);
 
 //Load a local server
 app.listen(process.env.PORT || 3000, () => {
