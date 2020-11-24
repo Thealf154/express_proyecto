@@ -26,7 +26,6 @@ function signin()
             user_password: password
         }
     }).then(function(res) {
-        console.log(res);
         alert("Usuario registrado correctamente");
         window.location.href = "login.html"
     }).catch(function(err) {

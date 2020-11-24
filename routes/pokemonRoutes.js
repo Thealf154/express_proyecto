@@ -7,9 +7,8 @@ pokemonRoutes.get("/", async (req, res, next) => {
   //This will wait for the database and won't execute
   //anything else until a response
   const pkmn = await db.query("SELECT * FROM pokemon");
-  console.log(pkmn);
   //Sends the database as a json, but only if the format is already in a json
-  return res.status(200).json({ code: 1, message: pkmn });
+  return res.status(200).json({ code: 200, message: pkmn });
 });
 
 //Expresión regular que acepta un grupo de tres números
