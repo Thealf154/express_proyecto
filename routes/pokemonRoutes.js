@@ -1,4 +1,3 @@
-const { json } = require("body-parser");
 const express = require("express");
 const pokemonRoutes = express.Router();
 const db = require("../config/database");

@@ -1,4 +1,3 @@
-const { query } = require("express");
 const express = require("express");
 const user = express.Router();
 const db = require("../config/database");
@@ -38,7 +37,7 @@ user.post("/login", async (req, res, next) => {
   const query = `SELECT * FROM user WHERE user_email = '${user_email}' AND user_password = '${user_password}';`;
   const rows = await db.query(query);
 
-  if (user_email && user_password) {
+  if (user_email, user_password) {
     if (rows.length == 1)
     {
       //recieves the data to create an autentication token for the user

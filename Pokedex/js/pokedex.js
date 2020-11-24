@@ -18,11 +18,10 @@ function loadPokedex()
 {
     axios.get("http://localhost:3000/pokemon", {
         headers: {
-            "Authorization" : "bearer" + localStorage.getItem("token")
+            "Authorization" : "bearer " + localStorage.getItem("token")
         }
     }).then(function(res) {
-        console.log(res);
-        displayPokemon(res.data.)
+        displayPokemon(res.data.message)
     }).catch(function(err) {
         console.log(err);
     })
