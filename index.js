@@ -21,10 +21,7 @@ app.use(express.urlencoded({ extended: true}));
 
 
 //This is to manage the user database requests
-app.get("/", (req, res, next) => {
-  res.status(200);
-  res.send("Hola mundo");
-});
+app.get("/", index);
 app.use("/user", user);
 app.use(auth);
 //This is a reference to all the routes in pokemonRoutes
